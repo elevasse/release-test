@@ -1,24 +1,38 @@
-# name: Create release
+name: Create release
 
-# on:
-#   push:
-#     tags:
-#       - v*
+on:
+  push:
+    tags:
+      - v*
 
-# permissions:
-#   contents: write
+permissions:
+  contents: write
 
-# jobs:
-#   release:
-#     name: Release pushed tag
-#     runs-on: ubuntu-24.04
-#     steps:
-#       - name: Create release
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#           tag: ${{ github.ref_name }}
-#         run: |
-#           gh release create "$tag" \
-#               --repo="$GITHUB_REPOSITORY" \
-#               --title="${GITHUB_REPOSITORY#*/} ${tag}" \
-#               --generate-notes
+jobs:
+  release:
+    name: Release pushed tag
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag}" \
+              -F CHANGELOG.md
