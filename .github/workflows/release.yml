@@ -35,4 +35,5 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag}" \
-              -F CHANGELOG.md
+              -F CHANGELOG.md \
+              'asset.txt'
