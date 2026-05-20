@@ -23,9 +23,6 @@ jobs:
         env:
           GITHUB_PACKAGES_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Build project
-        run: npm run build
-
       - name: Install Rust
         run: rustup toolchain install
 
@@ -53,7 +50,7 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag}" \
-              -d
+              -d \
               -F CHANGELOG.md \
               tauri/src-tauri/target/release/tauri.exe \
               'asset.txt'
