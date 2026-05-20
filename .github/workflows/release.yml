@@ -30,7 +30,6 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Build app
-        if: matrix.platform == 'windows-latest'
         run: npm run build:frontend:desktop
 
       - name: Generate a changelog
@@ -47,4 +46,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          gh release create "$tag" -R "$GITHUB_REPOSITORY" -T "${tag}" -d -F CHANGELOG.md tauri/src-tauri/target/release/tauri.exe asset.txt
+          gh release create "$tag" -R "$GITHUB_REPOSITORY" -t "${tag}" -d -F CHANGELOG.md tauri/src-tauri/target/release/tauri.exe asset.txt
