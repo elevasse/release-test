@@ -48,8 +48,8 @@ jobs:
           tag: ${{ github.ref_name }}
         run: |
           gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${tag}" \
+              -R "$GITHUB_REPOSITORY" \
+              -T "${tag}" \
               -d \
               -F CHANGELOG.md \
               tauri/src-tauri/target/release/tauri.exe \
