@@ -1,0 +1,8 @@
+{
+  "name": "project",
+  "private": true,
+  "workspaces":["tauri"],
+  "scripts": {
+    "build": "npm run b --workspace=tauri"
+  }
+}
