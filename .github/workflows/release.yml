@@ -41,9 +41,14 @@ jobs:
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
+      - name: Check tag name
+        env:
+          TAG: ${{ github.ref_name }}
+        run: echo ${TAG}
+
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
+          TAG: ${{ github.ref_name }}
         run: |
-          gh release create "${tag}" -R "$GITHUB_REPOSITORY" -t "${tag}" -d -F CHANGELOG.md tauri/src-tauri/target/release/tauri.exe asset.txt
+          gh release create "${TAG}" -R "$GITHUB_REPOSITORY" -t "${TAG}" -d -F CHANGELOG.md tauri/src-tauri/target/release/tauri.exe asset.txt
