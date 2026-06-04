@@ -25,7 +25,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: 'tauri.exe'
-          path: tauri.exe
+          path: target/release
       - name: Generate a changelog
         uses: orhun/git-cliff-action@v4
         with:
@@ -39,4 +39,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} -t ${{ github.ref_name }} -d -F CHANGELOG.md tauri.exe
+          gh release create ${{ github.ref_name }} -t ${{ github.ref_name }} -d -F CHANGELOG.md target/release/tauri.exe
