@@ -62,8 +62,8 @@ jobs:
       - name: upload app
         uses: actions/upload-artifact@v7
         with:
-          name: "$APP_NAME"
-          path: "target/release/$APP_NAME"
+          name: "${{env.APP_NAME}}"
+          path: "target/release/${{env.APP_NAME}}"
 
       - id: output-name
-        run: echo "artifact-name=$APP_NAME" >> $GITHUB_OUTPUT
+        run: echo "artifact-name=${{env.APP_NAME}}" >> $GITHUB_OUTPUT
