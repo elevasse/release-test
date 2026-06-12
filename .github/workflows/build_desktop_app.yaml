@@ -3,7 +3,19 @@
 name: Build desktop app
 
 on:
-  workflow_call:
+  workflow_call:  
+    outputs:
+      artifact-name:
+        description: "The name of the uploaded artifact"
+        value: ${{ jobs.build.outputs.artifact-name }}
+    inputs:
+      build-version:
+        required: true
+        type: string
+        default: ""
+
+env:
+  APP_NAME: "tauri.exe"
 
 permissions:
   contents: write
@@ -12,6 +24,8 @@ jobs:
   build:
     name: Build app
     runs-on: windows-latest
+    outputs:
+      artifact-name: ${{ steps.output-name.outputs.name }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -30,9 +44,18 @@ jobs:
 
       - name: Build app
         run: npm run build
+        
+      - name: Add build version prefix to artifact
+        if: ${{inputs.build-version != ''}}
+        run: |
+          mv ${{ env.APP_NAME}} "${{inputs.build-version}}-${{env.APP_NAME}}"
+          echo "APP_NAME=${{inputs.build-version}}-${{env.APP_NAME}}" >> $GITHUB_ENV
 
-      - name: upload
+      - name: upload app
         uses: actions/upload-artifact@v7
         with:
-          name: 'tauri.exe'
-          path: target/release/tauri.exe
+          name: '${{env.APP_NAME}}'
+          path: target/release/${{env.APP_NAME}}
+
+      - id: output-name
+        run: echo "name=${{env.APP_NAME}}" >> $GITHUB_OUTPUT
