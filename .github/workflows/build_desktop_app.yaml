@@ -3,6 +3,9 @@
 name: Build desktop app
 
 on:
+  push:
+    branches:
+      - main
   workflow_call:  
     outputs:
       artifact-name:
@@ -48,7 +51,7 @@ jobs:
       - name: Add build version prefix to artifact
         if: ${{inputs.build-version != ''}}
         run: |
-          mv ${{ env.APP_NAME}} "${{inputs.build-version}}-${{env.APP_NAME}}"
+          mv target/release/${{ env.APP_NAME}} target/release/"${{inputs.build-version}}-${{env.APP_NAME}}"
           echo "APP_NAME=${{inputs.build-version}}-${{env.APP_NAME}}" >> $GITHUB_ENV
 
       - name: upload app
