@@ -12,13 +12,13 @@ jobs:
   get-version:
     runs-on: 'ubuntu-latest'
     outputs:
-      version: ${{ steps.get-version.outputs }}
+      version: ${{ steps.get-version.outputs.version }}
     steps:
         # Get the tag version without the `desktop-front-` prefix.
       - id: get-version
         name: Get version
         run: |
-          echo ${{github.ref_name}} | sed "s/desktop-front-//g" >> $GITHUB_OUTPUT
+          echo "version=`echo ${{github.ref_name}} | sed "s/desktop-front-//g"`" >> $GITHUB_OUTPUT
 
   build: 
     uses: ./.github/workflows/build_desktop_app.yaml
