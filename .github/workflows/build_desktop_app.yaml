@@ -29,6 +29,11 @@ jobs:
     runs-on: windows-latest
     outputs:
       artifact-name: ${{ steps.output-name.outputs.artifact-name }}
+      
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - uses: actions/checkout@v5
         with:
