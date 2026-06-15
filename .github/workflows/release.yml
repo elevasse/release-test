@@ -5,6 +5,9 @@ on:
     tags:
       - desktop-front-v*.*.*
 
+permissions:
+  contents: write
+
 jobs:
   get-version:
     runs-on: 'ubuntu-latest'
