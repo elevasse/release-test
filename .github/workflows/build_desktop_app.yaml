@@ -17,9 +17,6 @@ on:
         type: string
         default: ""
 
-env:
-  APP_NAME: "tauri.exe"
-
 permissions:
   contents: write
 
@@ -52,18 +49,30 @@ jobs:
 
       - name: Build app
         run: npm run build
-        
+
+      - name: get prefixed artifact
+        id: get-prefixed-artifact
+        env:
+          app_name: "tauri.exe"
+        run: |
+          if [ ${{inputs.build-version != ''}}] ; then
+            echo "app-name=${{inputs.build-version}}-${{env.app_name}}" >> $GITHUB_OUTPUT
+          else
+            echo "app-name=${{env.app_name}}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Add build version prefix to artifact
+        env:
+          app_name: "tauri.exe"
         if: ${{inputs.build-version != ''}}
         run: |
-          mv target/release/${{ env.APP_NAME}} target/release/"${{inputs.build-version}}-${{env.APP_NAME}}"
-          echo "APP_NAME=${{inputs.build-version}}-${{env.APP_NAME}}" >> $GITHUB_ENV
+          mv target/release/${{ env.app_name }} target/release/"${{ steps.get-prefixed-artifact.outputs.app-name }}"
 
       - name: upload app
         uses: actions/upload-artifact@v7
         with:
-          name: "${{env.APP_NAME}}"
-          path: "target/release/${{env.APP_NAME}}"
+          name: "${{steps.get-prefixed-artifact.outputs.app-name }}"
+          path: "target/release/${{steps.get-prefixed-artifact.outputs.app-name }}"
 
       - id: output-name
-        run: echo "artifact-name=${{env.APP_NAME}}" >> $GITHUB_OUTPUT
+        run: echo "artifact-name=${{steps.get-prefixed-artifact.outputs.app-name }}" >> $GITHUB_OUTPUT
