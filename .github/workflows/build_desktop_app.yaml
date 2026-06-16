@@ -42,7 +42,36 @@ jobs:
         run: rustup toolchain install
 
       - name: Cache rust dependencies
-        uses: Swatinem/rust-cache@v2
+        uses: actions/cache@v5
+        env:
+          base-key: "rust-dependencies"
+        with:
+          path: |
+            ~/.cargo/*
+          key: "${{env.base-key}}-${{ runner.os }}-${{hashFiles('Cargo.lock')}}"
+          restore-keys: |
+            "${{env.base-key}}-${{ runner.os }}"
+            ${{env.base-key}}
+
+      - name: Cache rust artifacts
+        uses: actions/cache@v5
+        env:
+          base-key: "rust-artifacts"
+        with:
+          path: |
+            target
+          key: "${{env.base-key}}-${{ runner.os }}-${{hashFiles('frontend/desktop/**')}}"
+          restore-keys: |
+            "${{env.base-key}}-${{ runner.os }}"
+            ${{env.base-key}}
+
+      - name: Add clippy
+        run: rustup component add clippy
+
+      - name: Run clippy
+        env:
+          RUSTFLAGS: "-Dwarnings"
+        run: cargo clippy --no-deps --all-targets --all-features
 
       - name: Build app
         run: npm run build
