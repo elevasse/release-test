@@ -3,7 +3,7 @@ name: Create release
 on:
   push:
     tags:
-      - desktop-front-v*.*.*
+      - desktop-v*.*.*
 
 permissions:
   contents: write
@@ -13,12 +13,15 @@ jobs:
     runs-on: 'ubuntu-latest'
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+    env:
+      expected-tag-pattern: "^desktop-front-v"
     steps:
         # Get the tag version without the `desktop-front-` prefix.
       - id: get-version
         name: Get version
         run: |
-          echo "version=`echo ${{github.ref_name}} | sed "s/desktop-front-//g"`" >> $GITHUB_OUTPUT
+          echo ${{github.ref_name}} | grep ${{env.expected-tag-pattern}} || { echo "No match found"; exit 1; }
+          echo "version=`echo ${{github.ref_name}} | sed "s/${{env.expected-tag-pattern}}/v/g"`" >> $GITHUB_OUTPUT
 
   build: 
     uses: ./.github/workflows/build_desktop_app.yaml

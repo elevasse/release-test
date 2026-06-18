@@ -47,7 +47,7 @@ jobs:
           base-key: "rust-dependencies"
         with:
           path: |
-            ~/.cargo/*
+            ~/.cargo
           key: "${{env.base-key}}-${{ runner.os }}-${{hashFiles('Cargo.lock')}}"
           restore-keys: |
             "${{env.base-key}}-${{ runner.os }}"
