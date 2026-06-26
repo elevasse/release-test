@@ -41,7 +41,9 @@ jobs:
         run: |
           inputVersion="$(echo ${{inputs.build-version}} | sed "s/v//g")"
           projectVersion=$(cat tauri/src-tauri/Cargo.toml | yq -p toml '.package.version')
-          if [[ "$inputVersion" == "$projectVersion" ]] ; then
+          echo $inputVersion
+          echo $projectVersion
+          if [[ "$inputVersion" != "$projectVersion" ]] ; then
             echo "Desktop project version does not match tag version (Desktop project version : $projectVersion)"
             exit 1
           else
