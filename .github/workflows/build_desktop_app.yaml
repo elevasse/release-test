@@ -33,6 +33,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: install yq
+        run: choco install yq
+
       - name: Check project version
         if: ${{ inputs.build-version != '' }}
         run: |
