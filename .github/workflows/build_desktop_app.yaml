@@ -33,6 +33,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: echo event name
+        run: echo ${{ github.event_name }}
+
       - name: Check project version
         if: ${{ github.event_name == 'workflow_call' }}
         run: |
