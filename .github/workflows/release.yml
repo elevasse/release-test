@@ -3,7 +3,7 @@ name: Create release
 on:
   push:
     tags:
-      - desktop-v*.*.*
+      - desktop-front-v*.*.*
 
 permissions:
   contents: write
